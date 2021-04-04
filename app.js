@@ -35,52 +35,34 @@ const updateJokesMenu = function () {
 // Update the displayed joke, based on the requested joke
 const requestedJokeInput = document.getElementById('requested-joke')
 const jokeBox = document.getElementById('joke-box')
-const stringifiedJokes = JSON.stringify(jokes)
 const updateDisplayedJoke = function () {
-  const requestedJoke = requestedJokeInput.value
-  if (jokes[requestedJoke]) {
+  if (jokes[requestedJokeInput.value]) {
     jokeBox.innerHTML =
-      '<p>' + jokes[requestedJoke].setup + '</p>' +
-      '<p>' + jokes[requestedJoke].punchline + '</p>'
+      '<p>' + jokes[requestedJokeInput.value].setup + '</p>' +
+      '<p>' + jokes[requestedJokeInput.value].punchline + '</p>'
   } else {
     jokeBox.textContent = 'No matching joke found.'
   }
 }
 
-// Function to keep track of all other
-// page update functions, so that we
-// can call them all at once
+const addAbout = document.getElementById('about')
+const newSetup = document.getElementById('setup')
+const newPunchline = document.getElementById('punchline')
+const newJoke = document.getElementById('rememberJoke')
+const deleteAbout = document.getElementById('deleteAbout')
+const deleteJoke = document.getElementById('deleteJoke')
+const stringifiedJokes = JSON.stringify(jokes)
+
 const updatePage = function () {
-  let oldJokes = JSON.parse(window.localStorage.getItem('jokes'))
-  if (oldJokes === null) {
-    oldJokes = jokes
-    window.localStorage.setItem('jokes', stringifiedJokes)
+  let originJokes = JSON.parse(window.localStorage.getItem('jokes'))
+  if (originJokes !== null) {
+    jokes = originJokes
   } else {
-    jokes = oldJokes
+    originJokes = jokes
+    window.localStorage.setItem('jokes', stringifiedJokes)
   }
   updateJokesMenu()
   updateDisplayedJoke()
-}
-
-const newJoke = document.getElementById('rememberJoke')
-const newName = document.getElementById('name')
-const newSetup = document.getElementById('setup')
-const newPunchline = document.getElementById('punchline')
-const removeName = document.getElementById('deleteName')
-const removeJoke = document.getElementById('deleteJoke')
-const addJoke = function () {
-  jokes[newName.value] = { setup: newSetup.value, punchline: newPunchline.value }
-  window.localStorage.setItem('jokes', stringifiedJokes)
-  updateJokesMenu()
-}
-const deleteJoke = function () {
-  if (jokes[removeName.value]) {
-    delete jokes[removeName.value]
-    window.localStorage.setItem('jokes', stringifiedJokes)
-    updateJokesMenu()
-  } else {
-    window.alert('No matching joke found.')
-  }
 }
 
 // -------
@@ -96,5 +78,17 @@ updatePage()
 
 // Keep the requested joke up-to-date
 requestedJokeInput.addEventListener('input', updateDisplayedJoke)
-newJoke.addEventListener('click', addJoke)
-removeJoke.addEventListener('click', deleteJoke)
+newJoke.addEventListener('click', function () {
+  jokes[addAbout.value] = { setup: newSetup.value, punchline: newPunchline.value }
+  window.localStorage.setItem('jokes', stringifiedJokes)
+  updateJokesMenu()
+})
+deleteJoke.addEventListener('click', function () {
+  if (jokes[deleteAbout.value]) {
+    delete jokes[deleteAbout.value]
+    window.localStorage.setItem('jokes', stringifiedJokes)
+    updateJokesMenu()
+  } else {
+    window.alert('Cannot delete.')
+  }
+})
