@@ -51,7 +51,6 @@ const newPunchline = document.getElementById('punchline')
 const newJoke = document.getElementById('rememberJoke')
 const deleteAbout = document.getElementById('deleteAbout')
 const deleteJoke = document.getElementById('deleteJoke')
-const stringifiedJokes = JSON.stringify(jokes)
 
 const updatePage = function () {
   let originJokes = JSON.parse(window.localStorage.getItem('jokes'))
@@ -59,6 +58,7 @@ const updatePage = function () {
     jokes = originJokes
   } else {
     originJokes = jokes
+    const stringifiedJokes = JSON.stringify(jokes)
     window.localStorage.setItem('jokes', stringifiedJokes)
   }
   updateJokesMenu()
@@ -80,12 +80,14 @@ updatePage()
 requestedJokeInput.addEventListener('input', updateDisplayedJoke)
 newJoke.addEventListener('click', function () {
   jokes[addAbout.value] = { setup: newSetup.value, punchline: newPunchline.value }
+  const stringifiedJokes = JSON.stringify(jokes)
   window.localStorage.setItem('jokes', stringifiedJokes)
   updateJokesMenu()
 })
 deleteJoke.addEventListener('click', function () {
   if (jokes[deleteAbout.value]) {
     delete jokes[deleteAbout.value]
+    const stringifiedJokes = JSON.stringify(jokes)
     window.localStorage.setItem('jokes', stringifiedJokes)
     updateJokesMenu()
   } else {
